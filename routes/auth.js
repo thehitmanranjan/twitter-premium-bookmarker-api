@@ -29,7 +29,7 @@ router.get('/oauth/callback/twitter.com',
         console.log(err)
       }
     });
-    res.redirect('https://www.geeksforgeeks.org/express-js-res-redirect-function/');
+    res.redirect('/twitterbookmarker/showUserBookmark');
   });
 
 router.get('/logout', function (req, res, next) {

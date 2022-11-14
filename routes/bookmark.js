@@ -1,15 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Tweet = require('../models/tweet');
-const passport = require('passport');
-const ensureLoggedIn = require('../middleware/ensureLoggedIn');
-// var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
+// const passport = require('passport');
+// const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 //Declaring Express Router
 const bookmarkRouter = express.Router();
 var loggedIn
 bookmarkRouter.use(bodyParser.json());
 
-bookmarkRouter.route('/findbookmark')
+bookmarkRouter.route('/showUserBookmark')
     .get((req, res, next) => {
         let sess = req.session
         if(sess["user"]==undefined) {
@@ -17,7 +16,7 @@ bookmarkRouter.route('/findbookmark')
             res.end("Unauthorized")
             return
         }
-        Tweet.find({ userId: req.body.user_id })
+        Tweet.find({ userId: req.session["user"]})
             .then((tw) => {
                 if (tw != null) {
                     res.statusCode = 200;
