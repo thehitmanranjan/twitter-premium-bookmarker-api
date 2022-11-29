@@ -3,23 +3,18 @@ var passport = require('passport');
 const Users = require('../models/user')
 var router = express.Router();
 
-router.get('/login', function (req, res, next) {
-  res.redirect('/login/federated/twitter.com');
-});
+router.get('/auth/twitter',
+  passport.authenticate('twitter'));
 
-
-router.get('/login/federated/twitter.com', passport.authenticate('twitter'));
-
-router.get('/oauth/callback/twitter.com',
-  passport.authenticate('twitter', { assignProperty: 'federatedUser', failureRedirect: 'https://www.geeksforgeeks.org/express-js-res-redirect-function/' }),
-  function (req, res, next) {
-    
-    const federatedUserId = parseInt(req.federatedUser.id)
+router.get('/auth/twitter/callback', 
+  passport.authenticate('twitter', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
     let sess = req.session
-    sess.user = federatedUserId
+    sess.user = res.req.user.id
 
     const userId = {
-      "userId": federatedUserId
+      "userId": req.session.user
     }
     Users.findOneAndUpdate(userId, userId, {
       new: true,
@@ -29,6 +24,12 @@ router.get('/oauth/callback/twitter.com',
         console.log(err)
       }
     });
+    // res.statusCode = 200
+    // res.setHeader('Content-Type', 'application/json');
+    // res.json(userId);
+    console.log("ANS== ", req.cookie)
+    res.cookie('cookieName',20000, { maxAge: 900000, httpOnly: true });
+    console.log("ANS after== ", res.cookie.name)
     res.redirect('/twitterbookmarker/showUserBookmark');
   });
 
