@@ -24,13 +24,8 @@ router.get('/auth/twitter/callback',
         console.log(err)
       }
     });
-    // res.statusCode = 200
-    // res.setHeader('Content-Type', 'application/json');
-    // res.json(userId);
-    console.log("ANS== ", req.cookie)
-    res.cookie('cookieName',20000, { maxAge: 900000, httpOnly: true });
-    console.log("ANS after== ", res.cookie.name)
-    res.redirect('/twitterbookmarker/showUserBookmark');
+    res.statusCode = 200
+    res.redirect("http://localhost:5500/home.html")
   });
 
 router.get('/logout', function (req, res, next) {

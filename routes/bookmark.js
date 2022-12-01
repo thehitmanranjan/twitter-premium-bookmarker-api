@@ -11,6 +11,7 @@ bookmarkRouter.use(bodyParser.json());
 bookmarkRouter.route('/showUserBookmark')
     .get((req, res, next) => {
         let sess = req.session
+        console.log("sess[user]", sess["user"])
         if(sess["user"]==undefined) {
             res.statusCode = 403;
             res.end("Unauthorized")
