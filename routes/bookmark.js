@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Tweet = require('../models/tweet');
+const { requiresAuth } = require('express-openid-connect');
 // const passport = require('passport');
 // const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 //Declaring Express Router
@@ -9,15 +10,8 @@ var loggedIn
 bookmarkRouter.use(bodyParser.json());
 
 bookmarkRouter.route('/showUserBookmark')
-    .get((req, res, next) => {
-        let sess = req.session
-        console.log("sess[user]", sess["user"])
-        if(sess["user"]==undefined) {
-            res.statusCode = 403;
-            res.end("Unauthorized")
-            return
-        }
-        Tweet.find({ userId: req.session["user"]})
+    .get(requiresAuth(),(req, res, next) => {
+        Tweet.find({ userId: process.env.DEMO_USER_ID})
             .then((tw) => {
                 if (tw != null) {
                     res.statusCode = 200;
